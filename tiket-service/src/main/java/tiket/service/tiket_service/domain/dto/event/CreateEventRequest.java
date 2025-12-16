@@ -9,6 +9,7 @@ import lombok.Data;
 public class CreateEventRequest {
     private String name;
     private String description;
+    private Double price;
     private Instant startDate;
     private Integer availableSeats;
     private Integer totalSeats;
