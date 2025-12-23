@@ -1,0 +1,8 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.project.sourcePaths": [
+        "service-discovery",
+        "api-gateway"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
+}
