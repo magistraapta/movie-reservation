@@ -4,15 +4,14 @@ server:
 spring:
   cloud:
     gateway:
-      routes:
-        - id: tiket-service
-          uri: http://localhost:8081
-          predicates:
-            - Path=/tiket-service/**
-        - id: payment-service
-          uri: http://localhost:8082
-          predicates:
-            - Path=/payment-service/**
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/auth/**
+        
   application:
     name: api-gateway
 
