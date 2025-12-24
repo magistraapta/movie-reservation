@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 import auth.app.auth_service.domain.dto.CreateUserRequest;
 import auth.app.auth_service.domain.dto.LoginResponse;
 import auth.app.auth_service.domain.dto.UserLoginRequest;
@@ -23,12 +24,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody UserLoginRequest request) {
+    public LoginResponse login(@Valid @RequestBody UserLoginRequest request) {
         return userService.login(request);
     }
 
     @PostMapping("/signup")
-    public UserResponse signUp(@RequestBody CreateUserRequest request) {
+    public UserResponse signUp(@Valid @RequestBody CreateUserRequest request) {
         return userService.signUp(request);
     }
 
