@@ -27,7 +27,6 @@ public class MovieService {
     }
 
     public MovieResponse getMovieById(Long id) {
-        
         return movieMapper.movieToMovieDto(movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found")));
     }
 

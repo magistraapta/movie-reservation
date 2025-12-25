@@ -11,6 +11,10 @@ spring:
               uri: http://localhost:8081
               predicates:
                 - Path=/api/auth/**
+            - id: movie-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/movie/**
         
   application:
     name: api-gateway
