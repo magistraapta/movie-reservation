@@ -1,5 +1,6 @@
 package auth.app.auth_service.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,12 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
 import auth.app.auth_service.domain.dto.CreateUserRequest;
 import auth.app.auth_service.domain.dto.LoginResponse;
 import auth.app.auth_service.domain.dto.UserLoginRequest;
 import auth.app.auth_service.domain.dto.UserResponse;
 import auth.app.auth_service.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -51,5 +52,11 @@ public class AuthController {
     @GetMapping("/{id}")
     public UserResponse findById(@PathVariable Long id) {
         return userService.findById(id);
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String admin() {
+        return "Admin";
     }
 }

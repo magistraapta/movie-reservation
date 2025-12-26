@@ -64,7 +64,14 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         if (authentication.isAuthenticated()) {
-            String token = jwtService.generateToken(request.getUsername());
+            // Extract role from authentication authorities
+            String roleString = authentication.getAuthorities().iterator().next().getAuthority();
+            // Remove "ROLE_" prefix if present (Spring Security adds it)
+            if (roleString.startsWith("ROLE_")) {
+                roleString = roleString.substring(5);
+            }
+            UserRole role = UserRole.valueOf(roleString);
+            String token = jwtService.generateToken(request.getUsername(), role);
             return LoginResponse.builder().token(token).build();
         }
 

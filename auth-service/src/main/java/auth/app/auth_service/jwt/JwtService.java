@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import auth.app.auth_service.domain.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,8 +26,9 @@ public class JwtService {
     @Value("${app.jwt-expiration-ms}")
     private long EXPIRATION_TIME;
 
-    public String generateToken(String username) {
+    public String generateToken(String username, UserRole role) {
         Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", role.name());
         return createToken(extraClaims, username);
     }
 
@@ -51,6 +53,12 @@ public class JwtService {
     public String getUsernameFromToken(String token) {
         Claims claims = extractAllClaims(token);
         return claims.getSubject();
+    }
+
+    public UserRole getRoleFromToken(String token) {
+        Claims claims = extractAllClaims(token);
+        String roleString = claims.get("role", String.class);
+        return UserRole.valueOf(roleString);
     }
 
     public Claims extractAllClaims(String token) {
