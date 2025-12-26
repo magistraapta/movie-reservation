@@ -7,9 +7,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import movie.app.movie_service.domain.dto.request.CreateMovieRequest;
+import movie.app.movie_service.domain.dto.request.UpdateMovieRequest;
 import movie.app.movie_service.domain.dto.response.MovieResponse;
 import movie.app.movie_service.domain.entity.Movie;
 import movie.app.movie_service.domain.mapper.MovieMapper;
+import movie.app.movie_service.exception.MovieNotFoundException;
 import movie.app.movie_service.repository.MovieRepository;
 
 @Service
@@ -27,7 +29,7 @@ public class MovieService {
     }
 
     public MovieResponse getMovieById(Long id) {
-        return movieMapper.movieToMovieDto(movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found")));
+        return movieMapper.movieToMovieDto(movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie not found")));
     }
 
     @Transactional
@@ -38,21 +40,29 @@ public class MovieService {
     }
 
     @Transactional
-    public MovieResponse updateMovie(Long id, MovieResponse movieDto) {
+    public MovieResponse updateMovie(Long id, UpdateMovieRequest updateMovieRequest) {
 
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found"));
-        movie.setTitle(movieDto.getTitle());
-        movie.setDescription(movieDto.getDescription());
-        movie.setDuration(movieDto.getDuration());
-        movie.setReleaseDate(movieDto.getReleaseDate());
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie not found"));
+        if (updateMovieRequest.getTitle() != null) {
+            movie.setTitle(updateMovieRequest.getTitle());
+        }
+        if (updateMovieRequest.getDescription() != null) {
+            movie.setDescription(updateMovieRequest.getDescription());
+        }
+        if (updateMovieRequest.getDuration() != null) {
+            movie.setDuration(updateMovieRequest.getDuration());
+        }
+        if (updateMovieRequest.getReleaseDate() != null) {
+            movie.setReleaseDate(updateMovieRequest.getReleaseDate());
+        }
+
         movieRepository.save(movie);
-        
         return movieMapper.movieToMovieDto(movie);
     }
 
     @Transactional
     public void deleteMovie(Long id) {
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found"));
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie not found"));
         movieRepository.delete(movie);
     }
 }

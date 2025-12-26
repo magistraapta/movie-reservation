@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import movie.app.movie_service.domain.dto.request.CreateMovieRequest;
+import movie.app.movie_service.domain.dto.request.UpdateMovieRequest;
 import movie.app.movie_service.domain.dto.response.MovieResponse;
 import movie.app.movie_service.service.MovieService;
+import movie.app.movie_service.shared.ApiResponse;
 
 
 @RestController
@@ -25,35 +27,35 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/health")
-    public ResponseEntity<String> checkServerStatus() {
-        return ResponseEntity.status(HttpStatus.OK).body("Movie Service is running");
+    public ResponseEntity<ApiResponse<String>> checkServerStatus() {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("Movie Service is running", "Server is running"));
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> getAllMovies() {
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.getAllMovies());
+    public ResponseEntity<ApiResponse<List<MovieResponse>>> getAllMovies() {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(movieService.getAllMovies(), "Movies fetched successfully"));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.getMovieById(id));
+    public ResponseEntity<ApiResponse<MovieResponse>> getMovieById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(movieService.getMovieById(id), "Movie fetched successfully"));
     }
 
     @PostMapping
-    public ResponseEntity<MovieResponse> createMovie(@RequestBody CreateMovieRequest createMovieRequest) {
+    public ResponseEntity<ApiResponse<MovieResponse>> createMovie(@RequestBody CreateMovieRequest createMovieRequest) {
         MovieResponse movieResponse = movieService.createMovie(createMovieRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(movieResponse, "Movie created successfully"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<String>> deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted movie");
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("Successfully deleted movie", "Movie deleted successfully"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @RequestBody MovieResponse movieResponse) {
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.updateMovie(id, movieResponse));
+    public ResponseEntity<ApiResponse<MovieResponse>> updateMovie(@PathVariable Long id, @RequestBody UpdateMovieRequest updateMovieRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(movieService.updateMovie(id, updateMovieRequest), "Movie updated successfully"));
     }
 
 }

@@ -1,0 +1,8 @@
+package movie.app.movie_service.exception;
+
+public class AuditoriumNotFoundException extends RuntimeException {
+    public AuditoriumNotFoundException(String message) {
+        super(message);
+    }
+}
+
